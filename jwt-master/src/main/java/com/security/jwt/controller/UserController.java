@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("users")
+@CrossOrigin(origins = "http://localhost:4200", methods = {RequestMethod.GET, RequestMethod.POST}) // Aplica CORS para todos os métodos desse controlador
 public class UserController {
     private final UserService userService;
     public UserController(UserService userService) {
@@ -24,3 +25,4 @@ public class UserController {
         return userService.save(user);
     }
 }
+

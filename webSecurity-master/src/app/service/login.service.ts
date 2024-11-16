@@ -16,6 +16,7 @@ export class LoginService {
     const headers = new HttpHeaders({
       Authorization: `Basic ${btoa(`${username}:${password}`)}`,
     });
+
     return this.http.post(this.url + "/authenticate", null, { headers, responseType: 'text' });
   }
 }

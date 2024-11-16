@@ -17,9 +17,13 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -33,14 +37,30 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/authenticate").permitAll()
-                                .requestMatchers(HttpMethod.POST,"users").permitAll()
-                        .anyRequest().authenticated())
+        http
+                .csrf(csrf -> csrf.disable()) // Desabilita CSRF
+                .cors(Customizer.withDefaults()) // Habilita CORS com a configuração padrão
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/authenticate").permitAll() // Permite acesso ao endpoint de autenticação
+                        .requestMatchers(HttpMethod.POST, "users").permitAll() // Permite POST no endpoint de usuários
+                        .anyRequest().authenticated() // Requer autenticação para outras rotas
+                )
                 .httpBasic(Customizer.withDefaults())
-                .oauth2ResourceServer(conf -> conf.jwt(Customizer.withDefaults()));
+                .oauth2ResourceServer(conf -> conf.jwt(Customizer.withDefaults())); // Configura servidor OAuth2 com JWT
         return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Permite a origem Angular
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
+        configuration.setAllowedHeaders(Arrays.asList("*")); // Permite todos os cabeçalhos
+        configuration.setExposedHeaders(Arrays.asList("Authorization")); // Exponha cabeçalhos se necessário
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Aplica as configurações a todos os endpoints
+        return source;
     }
 
     @Bean

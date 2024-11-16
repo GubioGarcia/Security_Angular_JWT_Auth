@@ -16,7 +16,7 @@ export class UtilService {
       Authorization: 'Basic ' + token
     });
 
-    return this.http.get(this.url + "/api", {headers, responseType: "text"});
+    return this.http.get(this.url + "/user", {headers, responseType: "text"});
   }
 
   adm(){

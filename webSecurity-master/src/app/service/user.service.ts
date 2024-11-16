@@ -8,17 +8,17 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class UserService {
   private users: User[] = [];
-  private url = "http://localhost:8080/user";
+  private url = "http://localhost:8080/users";
 
   constructor(private httpClient: HttpClient) {}
 
-  get() {
+  get(){
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      Authorization: 'Basic ' + token
+      Authorization: `Bearer ${token}`
     });
 
-    return this.httpClient.get<User[]>(this.url, {headers});
+    return this.httpClient.get<User[]>(this.url, { headers });
   }
 
   adicionarUser(user: User): Observable<User> {

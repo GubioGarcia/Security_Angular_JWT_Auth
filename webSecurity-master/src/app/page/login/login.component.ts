@@ -29,9 +29,9 @@ export class LoginComponent {
   login(){
     this.loginService.login(this.username, this.password).subscribe({
       next: (response) => {
-        console.log('token: ', response);
         localStorage.setItem('token', response);
         localStorage.setItem('authStatus', JSON.stringify(true));
+        localStorage.setItem('adminStatus', JSON.stringify(true));
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {

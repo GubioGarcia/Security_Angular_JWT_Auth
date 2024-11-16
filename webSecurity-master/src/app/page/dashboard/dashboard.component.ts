@@ -22,12 +22,12 @@ export class DashboardComponent {
   }
 
   ngOnInit() {
-    this.utilService.dashboard().subscribe({
-      next: (response) => {
-        console.log(response)
-        this.title = response;
-      }
-    })
+    // this.utilService.dashboard().subscribe({
+    //   next: (response) => {
+    //     console.log(response)
+    //     this.title = response;
+    //   }
+    // })
   }
 
   dashboard(){
