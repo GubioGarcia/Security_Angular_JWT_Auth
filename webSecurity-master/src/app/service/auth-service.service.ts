@@ -1,35 +1,37 @@
-import {Injectable} from '@angular/core';
-import {Router} from "@angular/router";
+import { Injectable } from '@angular/core';
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthServiceService {
 
-  isAutenticado: boolean = this.getAuthStatus();
-  isAdmin: boolean = this.getAdminStatus();
+  isAutenticado: boolean = false;
+  isAdmin: boolean = false;
 
   constructor(private router: Router) {
+    const authStatus = localStorage.getItem('authStatus');
+    const adminStatus = localStorage.getItem('adminStatus');
+
+    this.isAutenticado = authStatus === 'true';
+    this.isAdmin = adminStatus === 'true';
   }
 
-  login(username: string, password: string) {
-    if (username && password) {
-      if (username === 'admin' && password === '123') {
-        this.setAuthState(true, true)
-        this.router.navigate(['/dashboard']);
-        return true;
-      } else if (username === 'user' && password === '123') {
-        this.setAuthState(true, false)
-        this.router.navigate(['/dashboard']);
-        return true;
-      }
+  login(token: string): void {
+    const decodedToken: any = this.decodeToken(token);
+
+    if (decodedToken && decodedToken.roles) {
+      this.setAuthState(true, decodedToken.roles.includes('ADMIN'));
+      localStorage.setItem('token', token);
+      this.router.navigate(['/dashboard']);
+    } else {
+      this.logout();
     }
-    return false;
   }
 
   logout(): void {
     localStorage.clear();
-    this.setAuthState(false, false)
+    this.setAuthState(false, false);
     this.router.navigate(['/']);
   }
 
@@ -46,5 +48,15 @@ export class AuthServiceService {
 
   private getAdminStatus(): boolean {
     return JSON.parse(localStorage.getItem('adminStatus') || 'false');
+  }
+
+  private decodeToken(token: string): any {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));  // Decodifica manualmente o payload
+      console.log(payload);
+      return payload;
+    } catch (e) {
+      return null;
+    }
   }
 }

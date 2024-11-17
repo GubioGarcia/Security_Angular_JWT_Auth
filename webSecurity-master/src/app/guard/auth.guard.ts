@@ -9,9 +9,10 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (authService.getAuthStatus()) {
     return true;
   } else {
-    alert("Sem permissão")
+    alert("Você não está autenticado");
     router.navigate(['/login']);
     return false;
   }
 
 };
+

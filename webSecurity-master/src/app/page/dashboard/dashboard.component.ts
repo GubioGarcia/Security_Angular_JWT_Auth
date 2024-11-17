@@ -21,14 +21,7 @@ export class DashboardComponent {
     private utilService: UtilService) {
   }
 
-  ngOnInit() {
-    // this.utilService.dashboard().subscribe({
-    //   next: (response) => {
-    //     console.log(response)
-    //     this.title = response;
-    //   }
-    // })
-  }
+  ngOnInit() {}
 
   dashboard(){
     this._router.navigate(['/dashboard']);

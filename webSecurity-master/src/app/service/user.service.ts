@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/User';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+
   private users: User[] = [];
   private url = "http://localhost:8080/users";
 
   constructor(private httpClient: HttpClient) {}
 
-  get(){
+  get() {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
@@ -24,7 +25,7 @@ export class UserService {
   adicionarUser(user: User): Observable<User> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      Authorization: 'Basic ' + token,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
 
@@ -47,4 +48,3 @@ export class UserService {
     return this.httpClient.delete<void>(`${this.url}/${id}`);
   }
 }
-

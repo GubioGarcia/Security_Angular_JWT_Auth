@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import {NgIf} from "@angular/common";
-import {FormsModule} from "@angular/forms";
-import {AuthServiceService} from "../../service/auth-service.service";
-import {LoginService} from "../../service/login.service";
-import {Router} from "@angular/router";
-import { HttpHeaders } from '@angular/common/http';
+import { NgIf } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { AuthServiceService } from "../../service/auth-service.service";
+import { LoginService } from "../../service/login.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-login',
@@ -26,17 +25,15 @@ export class LoginComponent {
               private loginService: LoginService,
               private router: Router ) {}
 
-  login(){
+  login() {
     this.loginService.login(this.username, this.password).subscribe({
       next: (response) => {
-        localStorage.setItem('token', response);
-        localStorage.setItem('authStatus', JSON.stringify(true));
-        localStorage.setItem('adminStatus', JSON.stringify(true));
+        this.authService.login(response);
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
-        alert("Usuario e senha invalido");
+        alert("Usuário e senha inválidos");
       }
-    })
+    });
   }
 }
